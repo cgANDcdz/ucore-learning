@@ -621,29 +621,3 @@ movl $bootstacktop, %esp
 - **cr3寄存器**  
 `存放页目录表的物理地址`;  
 同时,在ucore中,全局变量boot_cr3也用于记录页目录表的物理地址  
-
-
-- **为什么page_init()函数(见pmm.c)中只设置了内核代码占用空间(KERNBASE~KERNBASE+KMEMSIZE)的Page[]结构体数组,如果是用户代码怎么管理呢?**  
-??
-
-- **如何理解自映射机制**  
-所有页表占4MB,共1024个页,恰好对应页目录表中的一个表项;  
-`自映射`即:所有页表(4MB)对应的那个页目录表项,其表项值就是页目录表本身的物理地址  
-???
-
-- **pmm_init()中 boot_pgdir[PDX(VPT)] = PADDR(boot_pgdir) | PTE_P | PTE_W;的作用?**  
-??
-
-- **slob分配算法**  
-??
-实现详见kmalloc_init()代码(lab2中没有,可在lab8中mm目录下查看)  
-
-
-- **entry.S中,__boot_pt1是第一个页表(这部分虚拟地址明显在KERNBASE往上4MB以内),如何保证它最终映射到VPT(0xFAC00000)?**  
-??
-
-- **get_pte()函数中,给二级页表分配物理空间时,如何保证二级页表的虚拟地址在0xFAC00000往上的4MB范围内??**  
-??
-
-- **为什么pmm.c中令vpd=0xFAFEB000,使得页目录表夹在4MB的页表虚拟地址空间的内部??**  
-??

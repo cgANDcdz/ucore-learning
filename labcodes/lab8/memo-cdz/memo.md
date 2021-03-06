@@ -556,8 +556,6 @@ sfs_bmap_load_nolock函数将对应sfs_inode的第index个索引指向的block�
 
 
 # 相关细节/问题概览
-- **为什么stdin有缓冲区与等待队列,而stdout却没有(dev_stdin.c、dev_stdout.c)??**  
-???
 
 - **vnode与inode的关系?**  
 1.ucore中没有使用vnode命名.  
@@ -565,15 +563,6 @@ sfs_bmap_load_nolock函数将对应sfs_inode的第index个索引指向的block�
 传统的Unix既有v节点(vnode)也有i节点(inode),vnode的数据结构中包含了inode信息.但在Linux中没有使用vnode,使用了通用inode;   vnode("virtual node")仅在文件打开的时候才出现的,而inode定位文件在磁盘的位置,它的信息本身是存储在磁盘等上的,当打开文件的时候从磁盘上读入内存. => 从这个角度看sfs_inode就是vnode,sfs_disk_inode(都在sfs.h)就是inode  
 3.不过,ucore在VFS层有一个inode结构体,它可以看做是sfs_inode的包装,与2中所说的inode含义不同!
 
-- **SFS层与设备文件IO层是如何联系起来的??**  
-???
-
-- **如何表示硬链接??**  
-???
-
-- **真正理解文件描述符fd,文件描述符是如何分配的?**  
-fd是文件在filemap中的索引值(见kern/fs/file.h 下结构体:struct file)
-??
 
 - **如何理解目录是一个特殊的文件?**  
 目录也是一个普通文件,只是目录中存储的数据比较特殊,它存储的是以下格式的数组:  
@@ -626,5 +615,3 @@ int sfs_wbuf(struct sfs_fs *sfs, void *buf, size_t len, uint32_t blkno, off_t of
     return ret;
 }
 ```
-- **sfs什么时间创建的?**  
-??

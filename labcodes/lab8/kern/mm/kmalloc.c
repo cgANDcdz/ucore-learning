@@ -43,14 +43,19 @@
  * 0.为什么需要slob?
  * 	 => default_pmm.c中的first-fit算法是以page为单位分配的.但是分配对象时往往要不了那么多内存,
  * 		所以需要更细粒度的内存分配,slob就是在first-fit基础上的分配器...
+ * 
  * 1.这里一个slob对应一个page(虽然对应多个page也行)
+ * 
  * 2.ucore在实现上与linux的slob尚有一点区别:
  * 		完整的slob参考:https://lwn.net/Articles/157944/
- * 		对于这里的实现来说有一点点参考价值的文档:http://www.linuxidc.com/Linux/2012-07/64107.htm
+ * 		对于这里的实现来说有参考价值的文档:http://www.linuxidc.com/Linux/2012-07/64107.htm
+ * 
  * 3.ucore中分配的object(小对象,即下面的block)是8字节对齐的!
+ * 
  * 4.这里大对象分配时类似于buddy系统,分配的页面数必须是2的n次方,且2^n-1 < size < 2^n,size是对象大小
  *   大对象分配时就是page对齐的,即从一个全新的page开始,没用完的page之后不会被小对象使用
- * 
+ * 	 => 这样应该会造成较大的浪费;
+ * 		大对象的分配是伙伴系统; 小对象的分配才是slot算法
  * 
  * 
  * ********************************************************************************************/
@@ -96,8 +101,8 @@ typedef struct slob_block slob_t;
  * 大于一个page的对象(object/block)
  */ 
 struct bigblock {
-	int order;
-	void *pages;
+	int order;			 // => 这个大对象占用的page数为=2^order
+	void *pages;		 // 这个大对象起始虚拟地址(page对齐,即低12bit为0!)
 	struct bigblock *next;
 };
 typedef struct bigblock bigblock_t;

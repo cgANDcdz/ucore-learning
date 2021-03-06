@@ -326,11 +326,4 @@ struct vma_struct {
 通过`proc_struct -> mm_struct ->sm_priv`!  
 sm_priv是一个链表的头结点,这个链表链接的是一系列Page结构体,他们对应该进程在内存中的页面!!!  
 
-- **如何理解check_pgfault()中的如下两条语句?**  
-```
-代码见vmm.c
-page_remove(pgdir, ROUNDDOWN(addr, PGSIZE));
-free_page(pde2page(pgdir[0]));
-pgdir[0] = 0;
-```
-??
+
